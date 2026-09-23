@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Visor de Mascotas 3D</title>
+  <title>Visor de Mascotas 3D Interactivo</title>
   <style>
     * {
       box-sizing: border-box;
@@ -38,7 +38,6 @@
       font-size: 0.95rem;
     }
 
-    /* Galería en grid de 2 columnas */
     .gallery-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -60,11 +59,17 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
-    .viewport {
+    /* Contenedor relativo para posicionar el botón dentro */
+    .viewport-wrapper {
+      position: relative;
       width: 100%;
       height: 380px;
       background-color: #1b202a;
-      position: relative;
+    }
+
+    .viewport {
+      width: 100%;
+      height: 100%;
     }
 
     .card-info {
@@ -83,6 +88,7 @@
       color: #c9d1d9;
       line-height: 1.5;
       font-size: 0.98rem;
+      margin-bottom: 16px;
     }
 
     .controls-hint {
@@ -96,6 +102,33 @@
       font-size: 0.75rem;
       color: #8b949e;
       pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Botón de Pantalla Completa */
+    .btn-fullscreen {
+      width: 100%;
+      background: #238636;
+      color: #ffffff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn-fullscreen:hover {
+      background: #2ea043;
+    }
+
+    .btn-fullscreen:active {
+      transform: scale(0.98);
     }
 
     @media (max-width: 768px) {
@@ -103,13 +136,12 @@
         padding: 16px;
         gap: 16px;
       }
-      .viewport {
+      .viewport-wrapper {
         height: 300px;
       }
     }
   </style>
 
-  <!-- Import map para Three.js -->
   <script type="importmap">
     {
       "imports": {
@@ -129,23 +161,31 @@
   <main class="gallery-container">
     <!-- Tarjeta Perro -->
     <article class="card">
-      <div id="viewport-perro" class="viewport">
+      <div id="wrapper-perro" class="viewport-wrapper">
+        <div id="viewport-perro" class="viewport"></div>
         <span class="controls-hint">Rotar • Zoom • Pan</span>
       </div>
       <div class="card-info">
         <h2>Perro Cute 🐶</h2>
         <p>¡Pero qué perro más tierno y lindo! Tiene una mirada tan adorable que es imposible no encariñarse. ¿Quién no quisiera tener uno así en casa para jugar todo el día?</p>
+        <button class="btn-fullscreen" onclick="toggleFullscreen('wrapper-perro')">
+          ⤢ Pantalla Completa
+        </button>
       </div>
     </article>
 
     <!-- Tarjeta Hámster -->
     <article class="card">
-      <div id="viewport-hamster" class="viewport">
+      <div id="wrapper-hamster" class="viewport-wrapper">
+        <div id="viewport-hamster" class="viewport"></div>
         <span class="controls-hint">Rotar • Zoom • Pan</span>
       </div>
       <div class="card-info">
         <h2>Hámster Cute 🐹</h2>
         <p>Este pequeño amiguito es sumamente tierno y está disfrutando felizmente de un delicioso maní. ¡Mira cómo sostiene su comida con sus pequeñas patitas!</p>
+        <button class="btn-fullscreen" onclick="toggleFullscreen('wrapper-hamster')">
+          ⤢ Pantalla Completa
+        </button>
       </div>
     </article>
   </main>
