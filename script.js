@@ -4,7 +4,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const viewports = [];
 
-// Función para crear cada Viewport de forma ultra optimizada
 function crearViewport3D(containerId, modelPath) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -13,7 +12,7 @@ function crearViewport3D(containerId, modelPath) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x1b202a);
 
-  // 2. CÁMARA (Límites z-far y z-near ajustados para ahorrar cálculos)
+  // 2. CÁMARA
   const camera = new THREE.PerspectiveCamera(
     45,
     container.clientWidth / container.clientHeight,
@@ -21,27 +20,32 @@ function crearViewport3D(containerId, modelPath) {
     50
   );
 
-  // 3. RENDERIZADOR ALTO RENDIMIENTO
+  // 3. RENDERIZADOR OPTIMIZADO PARA MÓVILES
   const renderer = new THREE.WebGLRenderer({ 
     antialias: true,
     powerPreference: "high-performance",
-    precision: "mediump", // Precisión media para máxima velocidad de sombras/luces
-    stencil: false,       // Desactivamos buffer stencil no utilizado
-    depth: true
+    precision: "mediump"
   });
   
   renderer.setSize(container.clientWidth, container.clientHeight);
+  // Cap del PixelRatio para no sobrecargar baterías ni procesadores móviles
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
 
-  // 4. CONTROLES CON INERCIA SUAVE
+  // 4. CONTROLES TÁCTILES MEJORADOS
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-  controls.dampingFactor = 0.04; // Sensación de fluidez física al girar
-  controls.rotateSpeed = 0.8;
+  controls.dampingFactor = 0.05;
+  controls.rotateSpeed = 0.7; // Velocidad de rotación ideal para pantallas táctiles
 
-  // 5. ILUMINACIÓN EFICIENTE (Sin sombras dinámicas pesadas)
+  // Configuración explícita de gestos para móviles
+  controls.touches = {
+    ONE: THREE.TOUCH.ROTATE,   // Un dedo rota la mascota
+    TWO: THREE.TOUCH.DOLLY_PAN // Dos dedos hacen zoom o desplazan
+  };
+
+  // 5. ILUMINACIÓN LIGHTWEIGHT
   const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
   scene.add(ambientLight);
 
@@ -52,35 +56,28 @@ function crearViewport3D(containerId, modelPath) {
   const gridHelper = new THREE.GridHelper(10, 10, 0x3a4454, 0x252d3a);
   scene.add(gridHelper);
 
-  // Variable de estado para saber si el contenedor está en pantalla
   let isVisible = true;
 
-  // 6. CARGADOR CON OPTIMIZACIÓN DE TEXTURAS
+  // 6. CARGADOR Y CENTRADO DE MODELO
   const loader = new GLTFLoader();
   loader.load(
     modelPath,
     (gltf) => {
       const model = gltf.scene;
 
-      // Optimizar materiales y geometrías del modelo cargado
       model.traverse((child) => {
         if (child.isMesh) {
-          child.matrixAutoUpdate = false; // Desactiva recálculo de matrices si es estático
+          child.matrixAutoUpdate = false;
           child.updateMatrix();
-          
-          if (child.material) {
-            child.material.precision = "mediump";
-            if (child.material.map) {
-              child.material.map.generateMipmaps = true;
-              child.material.map.minFilter = THREE.LinearMipmapLinearFilter;
-            }
+          if (child.material && child.material.map) {
+            child.material.map.generateMipmaps = true;
+            child.material.map.minFilter = THREE.LinearMipmapLinearFilter;
           }
         }
       });
 
       scene.add(model);
 
-      // Centrado inteligente del objeto
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
@@ -102,7 +99,6 @@ function crearViewport3D(containerId, modelPath) {
     (error) => console.error(`Error cargando ${modelPath}:`, error)
   );
 
-  // Reajuste de tamaño rápido
   function resize() {
     const width = container.clientWidth;
     const height = container.clientHeight;
@@ -111,7 +107,7 @@ function crearViewport3D(containerId, modelPath) {
     renderer.setSize(width, height);
   }
 
-  // IntersectionObserver: Solo renderiza cuando el Viewport es visible en pantalla
+  // Pausa si el objeto no se está viendo en la pantalla del celular
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       isVisible = entry.isIntersecting;
@@ -123,17 +119,16 @@ function crearViewport3D(containerId, modelPath) {
   viewports.push({ scene, camera, renderer, controls, resize, getIsVisible: () => isVisible });
 }
 
-// Inicialización de los visores
+// Inicializar visores
 crearViewport3D('viewport-perro', 'modelos/PerroCute.glb');
 crearViewport3D('viewport-hamster', 'modelos/HamsterCute.glb');
 
-// BUCLE DE RENDERIZADO UNIFICADO Y OPTIMIZADO
+// LOOP DE RENDERIZADO UNIFICADO
 function animate() {
   requestAnimationFrame(animate);
 
   for (let i = 0; i < viewports.length; i++) {
     const vp = viewports[i];
-    // Solo actualiza y renderiza si el elemento está visible en pantalla
     if (vp.getIsVisible()) {
       vp.controls.update();
       vp.renderer.render(vp.scene, vp.camera);
@@ -142,12 +137,11 @@ function animate() {
 }
 animate();
 
-// Evento Resize Global
+// Eventos de redimensión y cambio de orientación en móviles
 window.addEventListener('resize', () => {
   viewports.forEach(vp => vp.resize());
 });
 
-// Función Global Pantalla Completa
 window.toggleFullscreen = function(wrapperId) {
   const elem = document.getElementById(wrapperId);
   if (!elem) return;
