@@ -24,34 +24,44 @@
 
   <main class="gallery-container">
     <!-- Tarjeta Perro -->
-    <article class="card">
-      <div id="wrapper-perro" class="viewport-wrapper">
-        <div id="viewport-perro" class="viewport"></div>
-        <span class="controls-hint">Rotar • Zoom • Pan</span>
-      </div>
-      <div class="card-info">
-        <h2>Perro Cute 🐶</h2>
-        <p>¡Pero qué perro más tierno y lindo! Tiene una mirada tan adorable que es imposible no encariñarse. ¿Quién no quisiera tener uno así en casa para jugar todo el día?</p>
-        <button class="btn-fullscreen" onclick="toggleFullscreen('wrapper-perro')">
-          ⤢ Pantalla Completa
-        </button>
-      </div>
-    </article>
+<article class="card">
+  <div id="wrapper-perro" class="viewport-wrapper">
+    <div id="viewport-perro" class="viewport"></div>
+    <span class="controls-hint">Rotar • Zoom • Pan</span>
+    
+    <!-- Botón flotante para salir de pantalla completa -->
+    <button class="btn-exit-fullscreen" onclick="exitFullscreen()">
+      ✕ Salir de Pantalla Completa
+    </button>
+  </div>
+  <div class="card-info">
+    <h2>Perro Cute 🐶</h2>
+    <p>¡Pero qué perro más tierno y lindo! Tiene una mirada tan adorable que es imposible no encariñarse. ¿Quién no quisiera tener uno así en casa para jugar todo el día?</p>
+    <button class="btn-fullscreen" onclick="toggleFullscreen('wrapper-perro')">
+      ⤢ Pantalla Completa
+    </button>
+  </div>
+</article>
 
-    <!-- Tarjeta Hámster -->
-    <article class="card">
-      <div id="wrapper-hamster" class="viewport-wrapper">
-        <div id="viewport-hamster" class="viewport"></div>
-        <span class="controls-hint">Rotar • Zoom • Pan</span>
-      </div>
-      <div class="card-info">
-        <h2>Hámster Cute 🐹</h2>
-        <p>Este pequeño amiguito es sumamente tierno y está disfrutando felizmente de un delicioso maní. ¡Mira cómo sostiene su comida con sus pequeñas patitas!</p>
-        <button class="btn-fullscreen" onclick="toggleFullscreen('wrapper-hamster')">
-          ⤢ Pantalla Completa
-        </button>
-      </div>
-    </article>
+<!-- Tarjeta Hámster -->
+<article class="card">
+  <div id="wrapper-hamster" class="viewport-wrapper">
+    <div id="viewport-hamster" class="viewport"></div>
+    <span class="controls-hint">Rotar • Zoom • Pan</span>
+    
+    <!-- Botón flotante para salir de pantalla completa -->
+    <button class="btn-exit-fullscreen" onclick="exitFullscreen()">
+      ✕ Salir de Pantalla Completa
+    </button>
+  </div>
+  <div class="card-info">
+    <h2>Hámster Cute 🐹</h2>
+    <p>Este pequeño amiguito es sumamente tierno y está disfrutando felizmente de un delicioso maní. ¡Mira cómo sostiene su comida con sus pequeñas patitas!</p>
+    <button class="btn-fullscreen" onclick="toggleFullscreen('wrapper-hamster')">
+      ⤢ Pantalla Completa
+    </button>
+  </div>
+</article>
   </main>
 
   <script type="module" src="script.js"></script>

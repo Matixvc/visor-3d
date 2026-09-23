@@ -142,24 +142,39 @@ window.addEventListener('resize', () => {
   viewports.forEach(vp => vp.resize());
 });
 
+// Función para entrar o alternar Pantalla Completa
 window.toggleFullscreen = function(wrapperId) {
   const elem = document.getElementById(wrapperId);
   if (!elem) return;
 
-  if (!document.fullscreenElement) {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) {
+    } else if (elem.webkitRequestFullscreen) { /* Compatibilidad iOS / Safari */
       elem.webkitRequestFullscreen();
     }
   } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    }
+    window.exitFullscreen();
   }
 };
 
+// Función dedicada exclusivamente a salir de Pantalla Completa
+window.exitFullscreen = function() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) { /* Compatibilidad iOS / Safari */
+    document.webkitExitFullscreen();
+  }
+};
+
+// Listener para reajustar los visores 3D al cambiar de tamaño
 document.addEventListener('fullscreenchange', () => {
+  setTimeout(() => {
+    viewports.forEach(vp => vp.resize());
+  }, 100);
+});
+
+document.addEventListener('webkitfullscreenchange', () => {
   setTimeout(() => {
     viewports.forEach(vp => vp.resize());
   }, 100);
