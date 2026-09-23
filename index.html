@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visor de Mascotas 3D</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0d0f12;
+      color: #ffffff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      background: #161a22;
+      border-bottom: 1px solid #2a303c;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: #f0f6fc;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: #8b949e;
+      font-size: 0.95rem;
+    }
+
+    /* Galería en grid de 2 columnas */
+    .gallery-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      padding: 24px;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+    }
+
+    .card {
+      background: #161a22;
+      border: 1px solid #2a303c;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .viewport {
+      width: 100%;
+      height: 380px;
+      background-color: #1b202a;
+      position: relative;
+    }
+
+    .card-info {
+      padding: 20px;
+      border-top: 1px solid #2a303c;
+      background: #161a22;
+    }
+
+    .card-info h2 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      color: #38edf8;
+    }
+
+    .card-info p {
+      color: #c9d1d9;
+      line-height: 1.5;
+      font-size: 0.98rem;
+    }
+
+    .controls-hint {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: #8b949e;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .gallery-container {
+        padding: 16px;
+        gap: 16px;
+      }
+      .viewport {
+        height: 300px;
+      }
+    }
+  </style>
+
+  <!-- Import map para Three.js -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <header>
+    <h1>Visor 3D Interactivo de Mascotas</h1>
+    <p>Usa el mouse o la pantalla táctil para rotar, mover y hacer zoom a los modelos</p>
+  </header>
+
+  <main class="gallery-container">
+    <!-- Tarjeta Perro -->
+    <article class="card">
+      <div id="viewport-perro" class="viewport">
+        <span class="controls-hint">Rotar • Zoom • Pan</span>
+      </div>
+      <div class="card-info">
+        <h2>Perro Cute 🐶</h2>
+        <p>¡Pero qué perro más tierno y lindo! Tiene una mirada tan adorable que es imposible no encariñarse. ¿Quién no quisiera tener uno así en casa para jugar todo el día?</p>
+      </div>
+    </article>
+
+    <!-- Tarjeta Hámster -->
+    <article class="card">
+      <div id="viewport-hamster" class="viewport">
+        <span class="controls-hint">Rotar • Zoom • Pan</span>
+      </div>
+      <div class="card-info">
+        <h2>Hámster Cute 🐹</h2>
+        <p>Este pequeño amiguito es sumamente tierno y está disfrutando felizmente de un delicioso maní. ¡Mira cómo sostiene su comida con sus pequeñas patitas!</p>
+      </div>
+    </article>
+  </main>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
